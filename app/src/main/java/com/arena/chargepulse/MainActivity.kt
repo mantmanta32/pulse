@@ -62,8 +62,6 @@ class BatteryViewModel(application: Application) : androidx.lifecycle.AndroidVie
         val source = intent ?: return BatteryState(
             percentage = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
                 .takeIf { it in 0..100 },
-            voltage = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_VOLTAGE)
-                .takeIf { it > 0 }?.div(1000f),
             currentMa = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
                 .takeIf { it != Int.MIN_VALUE }?.div(1000)
         )
@@ -71,9 +69,7 @@ class BatteryViewModel(application: Application) : androidx.lifecycle.AndroidVie
         val scale = source.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val percentage = if (level >= 0 && scale > 0) (level * 100f / scale).toInt() else null
         val plugged = source.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) != 0
-        val managerVoltage = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_VOLTAGE)
-        val voltage = managerVoltage.takeIf { it > 0 }?.div(1000f)
-            ?: source.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1).takeIf { it > 0 }?.div(1000f)
+        val voltage = source.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1).takeIf { it > 0 }?.div(1000f)
         val rawCurrent = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
         return BatteryState(
             isPlugged = plugged,
