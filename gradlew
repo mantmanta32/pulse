@@ -250,6 +250,9 @@ eval "set -- $(
 "$JAVACMD" "$@" > "$APP_HOME/gradle-build-output.log" 2>&1
 _rc=$?
 cat "$APP_HOME/gradle-build-output.log"
-sed -n 's/^e: \(.*\)/::error::\1/p' "$APP_HOME/gradle-build-output.log" | head -40
-sed -n '/What went wrong:/,/^\* Try:/p' "$APP_HOME/gradle-build-output.log" | grep -v '^\* Try:' | head -20 | sed 's/^\(.\)/::error::\1/'
+if [ "$_rc" -ne 0 ]; then
+  sed -n 's/^e: \(.*\)/::error::KOTLIN-E \1/p' "$APP_HOME/gradle-build-output.log" | head -9
+  _MSG=$(tail -60 "$APP_HOME/gradle-build-output.log" | tr '\n' '~' | tr -d '\r' | cut -c1-3800)
+  echo "::error::LOGTAIL~$_MSG"
+fi
 exit $_rc
