@@ -110,15 +110,15 @@ private fun BatteryOrb(percentage: Int?, charging: Boolean, glow: Float) {
 private fun ChargingReadings(state: BatteryState) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp), modifier = Modifier.fillMaxWidth()) {
         ReadingCard("VOLTAJ", state.voltage, "V", 5.2f)
-        ReadingCard("AKIM", state.currentMa?.let { kotlin.math.abs(it).toFloat() }, "mA", 3000f)
+        ReadingCard("AKIM", state.currentA?.let { kotlin.math.abs(it) }, "A", 3f)
     }
 }
 
 @Composable
 private fun ReadingCard(label: String, value: Float?, unit: String, max: Float) {
     val target = value ?: 0f
-    val animated by animateFloatAsState(target, tween(700, easing = FastOutSlowInEasing), label = label)
-    val format = if (unit == "V") String.format(java.util.Locale.US, "%.2f", animated) else animated.roundToInt().toString()
+    val animated by animateFloatAsState(target, tween(500, easing = FastOutSlowInEasing), label = label)
+    val format = String.format(java.util.Locale.US, "%.4f", animated)
     Column(
         modifier = Modifier.fillMaxWidth().shadow(24.dp, RoundedCornerShape(28.dp), ambientColor = Cyan.copy(.18f), spotColor = Cyan.copy(.14f)).clip(RoundedCornerShape(28.dp))
             .background(Brush.linearGradient(listOf(Glass, Color(0x120B1B35)))).drawBehind { drawRoundRect(Color.White.copy(.10f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(28.dp.toPx()), style = Stroke(1.dp.toPx())) }
