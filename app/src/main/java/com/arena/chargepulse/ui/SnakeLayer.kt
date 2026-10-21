@@ -257,6 +257,7 @@ private class SnakeWorld {
     private fun headRadiusPx() = 10f * density
 
     fun draw(scope: DrawScope) {
+        with(scope) {
         if (width == 0f || segments.isEmpty()) return
 
         // Bubbles: glassy colored balloons.
@@ -354,6 +355,7 @@ private class SnakeWorld {
                 radius = eyeR * 0.5f,
                 center = Offset(cx + ex * eyeR * 0.35f, cy + ey * eyeR * 0.35f)
             )
+        }
         }
     }
 }
