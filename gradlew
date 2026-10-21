@@ -247,9 +247,9 @@ eval "set -- $(
 
 # TEMP (debugging aid): surface Kotlin/Gradle build errors as GitHub Actions
 # annotations so they are visible through the checks API. Safe to remove.
-set -o pipefail
-"$JAVACMD" "$@" 2>&1 | tee "$APP_HOME/gradle-build-output.log"
+"$JAVACMD" "$@" > "$APP_HOME/gradle-build-output.log" 2>&1
 _rc=$?
+cat "$APP_HOME/gradle-build-output.log"
 sed -n 's/^e: \(.*\)/::error::\1/p' "$APP_HOME/gradle-build-output.log" | head -40
 sed -n '/What went wrong:/,/^\* Try:/p' "$APP_HOME/gradle-build-output.log" | grep -v '^\* Try:' | head -20 | sed 's/^\(.\)/::error::\1/'
 exit $_rc
