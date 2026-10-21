@@ -139,16 +139,14 @@ private class SnakeWorld {
         if (cut < history.size) history.subList(cut, history.size).clear()
         placeSegments(spacing)
 
-        // Eat bubbles the head touches.
+        // Eat bubbles the head touches (collect first, then remove — eat() spawns a new bubble).
         val headR = headRadiusPx()
-        bubbles.removeAll { b ->
-            val d = Offset(b.x - headX, b.y - headY).getDistance()
-            if (d < headR + b.radius * 0.8f) {
-                eat(b)
-                true
-            } else {
-                false
-            }
+        val eaten = bubbles.filter {
+            Offset(it.x - headX, it.y - headY).getDistance() < headR + it.radius * 0.8f
+        }
+        if (eaten.isNotEmpty()) {
+            bubbles.removeAll(eaten.toSet())
+            eaten.forEach { eat(it) }
         }
 
         // Bubbles drift slowly upward and sway.
