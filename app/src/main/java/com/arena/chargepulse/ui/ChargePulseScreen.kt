@@ -66,6 +66,7 @@ fun ChargePulseScreen(state: BatteryState) {
         }.padding(horizontal = 24.dp),
         contentAlignment = Alignment.Center
     ) {
+        SnakeLayer(Modifier.matchParentSize())
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
             BatteryOrb(percentage = state.percentage, charging = state.isPlugged, glow = aura)
             Spacer(Modifier.height(42.dp))
