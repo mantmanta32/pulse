@@ -245,14 +245,4 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-# TEMP (debugging aid): surface Kotlin/Gradle build errors as GitHub Actions
-# annotations so they are visible through the checks API. Safe to remove.
-"$JAVACMD" "$@" > "$APP_HOME/gradle-build-output.log" 2>&1
-_rc=$?
-cat "$APP_HOME/gradle-build-output.log"
-if [ "$_rc" -ne 0 ]; then
-  sed -n 's/^e: \(.*\)/::error::KOTLIN-E \1/p' "$APP_HOME/gradle-build-output.log" | head -9
-  _MSG=$(tail -60 "$APP_HOME/gradle-build-output.log" | tr '\n' '~' | tr -d '\r' | cut -c1-3800)
-  echo "::error::LOGTAIL~$_MSG"
-fi
-exit $_rc
+exec "$JAVACMD" "$@"
